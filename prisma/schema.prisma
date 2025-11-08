@@ -1,0 +1,199 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// User Model with Role-based Access
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String    @unique
+  password      String
+  role          UserRole  @default(STUDENT)
+  classNumber   Int?
+  phone         String?
+  profileImage  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  enrollments   Enrollment[]
+  progress      Progress[]
+  testResults   TestResult[]
+  comments      Comment[]
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+// Class Model
+model Class {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  classNumber   Int       @unique
+  className     String
+  description   String?
+  totalContent  Int       @default(0)
+  enrolledStudents Int    @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  subjects      Subject[]
+  enrollments   Enrollment[]
+}
+
+// Subject Model
+model Subject {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String
+  icon          String
+  color         String
+  topics        Int       @default(0)
+  classId       String    @db.ObjectId
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  class         Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
+  contents      Content[]
+  
+  @@index([classId])
+}
+
+// Content Model (Videos, PDFs, Notes, Tests)
+model Content {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  description   String?
+  type          ContentType
+  url           String?
+  thumbnail     String?
+  duration      String?     // For videos
+  pages         Int?        // For PDFs and notes
+  questions     Int?        // For tests
+  fileSize      String?
+  uploadDate    DateTime    @default(now())
+  views         Int         @default(0)
+  isPublished   Boolean     @default(true)
+  subjectId     String      @db.ObjectId
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  // Relations
+  subject       Subject     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  progress      Progress[]
+  testResults   TestResult[]
+  comments      Comment[]
+  
+  @@index([subjectId])
+  @@index([type])
+}
+
+enum ContentType {
+  VIDEO
+  PDF
+  NOTES
+  TEST
+}
+
+// Enrollment Model
+model Enrollment {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String    @db.ObjectId
+  classId       String    @db.ObjectId
+  enrolledAt    DateTime  @default(now())
+  status        EnrollmentStatus @default(ACTIVE)
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  class         Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, classId])
+  @@index([userId])
+  @@index([classId])
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  INACTIVE
+}
+
+// Progress Tracking
+model Progress {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String    @db.ObjectId
+  contentId     String    @db.ObjectId
+  completed     Boolean   @default(false)
+  progress      Int       @default(0) // 0-100
+  lastAccessed  DateTime  @default(now())
+  completedAt   DateTime?
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content       Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, contentId])
+  @@index([userId])
+  @@index([contentId])
+}
+
+// Test Results
+model TestResult {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String    @db.ObjectId
+  contentId     String    @db.ObjectId
+  score         Int
+  totalQuestions Int
+  percentage    Float
+  timeTaken     Int?      // in seconds
+  attemptedAt   DateTime  @default(now())
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content       Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([contentId])
+}
+
+// Comments/Discussions
+model Comment {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String    @db.ObjectId
+  contentId     String    @db.ObjectId
+  text          String
+  likes         Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content       Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([contentId])
+}
+
+// Analytics Model
+model Analytics {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  date          DateTime  @default(now())
+  totalUsers    Int       @default(0)
+  activeUsers   Int       @default(0)
+  totalViews    Int       @default(0)
+  totalEnrollments Int    @default(0)
+  
+  @@index([date])
+}

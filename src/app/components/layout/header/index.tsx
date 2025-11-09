@@ -11,12 +11,18 @@ import Logo from './Logo'
 import MobileHeader from './Navigation/MobileHeader'
 import ThemeToggler from './ThemeToggle'
 import SearchBar from '../../shared/search/SearchBar'
+import { RainbowButton } from '../../ui/rainbow-button'
+import Modal from '../../ui/modal'
+import SigninModalContent from '../../auth/sign-in/SigninModalContent'
+import SignupModalContent from '../../auth/sign-up/SignupModalContent'
 
 const Header = () => {
   const { data: session } = useSession()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [user, setUser] = useState<{ user: any } | null>(null)
   const [sticky, setSticky] = useState(false)
+  const [signinModalOpen, setSigninModalOpen] = useState(false)
+  const [signupModalOpen, setSignupModalOpen] = useState(false)
   const pathname = usePathname()
 
   const handleScroll = () => {
@@ -85,17 +91,23 @@ const Header = () => {
                   </div>
                 </div>
               ) : (
-                <div className='flex items-center gap-2'>
-                  <Link
-                    href={'/signin'}
-                    className='hidden lg:block bg-transparent border border-dark_black dark:border-white/50 text-primary px-2.5 xl:px-4 py-2 rounded-full hover:bg-dark_black hover:text-white'>
+                <div className='flex items-center gap-3'>
+                  <RainbowButton 
+                    variant="outline" 
+                    size="default"
+                    className='hidden lg:inline-flex rounded-full'
+                    onClick={() => setSigninModalOpen(true)}
+                  >
                     Sign In
-                  </Link>
-                  <Link
-                    href={'/signup'}
-                    className='hidden lg:block text-white px-2.5 xl:px-4 py-2  bg-dark_black dark:bg-white/20 rounded-full hover:opacity-90'>
+                  </RainbowButton>
+                  <RainbowButton 
+                    variant="default" 
+                    size="default"
+                    className='hidden lg:inline-flex rounded-full'
+                    onClick={() => setSignupModalOpen(true)}
+                  >
                     Sign Up
-                  </Link>
+                  </RainbowButton>
                 </div>
               )}
 
@@ -193,16 +205,22 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <Link
-                      href={'/signin'}
+                    <button
+                      onClick={() => {
+                        setSidebarOpen(false)
+                        setSigninModalOpen(true)
+                      }}
                       className='w-full border border-dark_black dark:border-white text-primary px-4 py-2 rounded-md hover:bg-dark_black dark:hover:bg-white hover:text-white dark:hover:text-dark_black'>
                       Sign In
-                    </Link>
-                    <Link
-                      href={'/signup'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSidebarOpen(false)
+                        setSignupModalOpen(true)
+                      }}
                       className='w-full text-white dark:text-dark_black px-4 py-2 bg-dark_black dark:bg-white rounded-md hover:opacity-90'>
                       Sign Up
-                    </Link>
+                    </button>
                   </>
                 )}
               </div>
@@ -210,6 +228,28 @@ const Header = () => {
           </div>
         </div>
       </header>
+
+      {/* Signin Modal */}
+      <Modal isOpen={signinModalOpen} onClose={() => setSigninModalOpen(false)}>
+        <SigninModalContent 
+          onClose={() => setSigninModalOpen(false)}
+          onSwitchToSignup={() => {
+            setSigninModalOpen(false)
+            setSignupModalOpen(true)
+          }}
+        />
+      </Modal>
+
+      {/* Signup Modal */}
+      <Modal isOpen={signupModalOpen} onClose={() => setSignupModalOpen(false)}>
+        <SignupModalContent 
+          onClose={() => setSignupModalOpen(false)}
+          onSwitchToSignin={() => {
+            setSignupModalOpen(false)
+            setSigninModalOpen(true)
+          }}
+        />
+      </Modal>
     </>
   )
 }

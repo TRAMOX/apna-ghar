@@ -4,11 +4,12 @@ import ClassDetailContent from './ClassDetailContent'
 import { classesData } from '@/data/classesData'
 
 interface Props {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const classNumber = parseInt(params.id)
+  const { id } = await params
+  const classNumber = parseInt(id)
   const classData = classesData.find((c) => c.classNumber === classNumber)
 
   if (!classData) {
@@ -29,8 +30,9 @@ export async function generateStaticParams() {
   }))
 }
 
-export default function ClassPage({ params }: Props) {
-  const classNumber = parseInt(params.id)
+export default async function ClassPage({ params }: Props) {
+  const { id } = await params
+  const classNumber = parseInt(id)
   const classData = classesData.find((c) => c.classNumber === classNumber)
 
   if (!classData) {

@@ -2,13 +2,16 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { useTheme } from 'next-themes'
 import SocialSignIn from '../SocialSignIn'
 import { useState } from 'react'
 import Loader from '../../shared/loader'
 import Logo from '../../layout/header/Logo'
+import { ShineBorder } from '../../ui/shine-border'
 
 const SignUp = () => {
   const router = useRouter()
+  const { theme } = useTheme()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -69,7 +72,7 @@ const SignUp = () => {
     const emailError = validateEmail(formData.email)
     const passwordError = validatePassword(formData.password)
 
-    setErrors({ name: nameError, email: emailError, password: passwordError })
+    setErrors({ name: nameError, email: emailError, password: passwordError, classNumber: '' })
     if (nameError || emailError || passwordError) {
       toast.error('Please fix the errors before submitting.')
       return
@@ -93,7 +96,8 @@ const SignUp = () => {
         <div className='container'>
           <div className='-mx-4 flex flex-wrap'>
             <div className='w-full px-4'>
-              <div className='relative shadow-lg mx-auto max-w-32 overflow-hidden rounded-lg bg-white dark:bg-dark_black px-8 py-14 text-center dark:bg-dark-2 sm:px-12 md:px-16'>
+              <div className='relative shadow-lg mx-auto max-w-32 overflow-hidden rounded-lg bg-white dark:bg-dark_black px-8 py-14 text-center dark:bg-dark-2 sm:px-12 md:px-16' suppressHydrationWarning>
+                <ShineBorder shineColor={theme === 'dark' ? 'white' : 'black'} />
                 <div className='mb-10 flex justify-center'>
                   <Logo />
                 </div>

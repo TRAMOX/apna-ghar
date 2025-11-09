@@ -39,7 +39,7 @@ function Achievements() {
               <h2>
                 Accolades and achievements celebration our{' '}
                 <span className='instrument-font italic font-normal dark:text-white/70'>
-                  design excellence
+                  educational excellence
                 </span>
               </h2>
             </div>

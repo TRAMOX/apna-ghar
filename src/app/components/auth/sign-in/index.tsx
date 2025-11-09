@@ -4,12 +4,15 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useTheme } from 'next-themes'
 import SocialSignIn from '../SocialSignIn'
 import Loader from '../../shared/loader'
 import Logo from '../../layout/header/Logo'
+import { ShineBorder } from '../../ui/shine-border'
 
 const Signin = () => {
   const router = useRouter()
+  const { theme } = useTheme()
   const [loading, setLoading] = useState(false)
   const [loginData, setLoginData] = useState({
     email: '',
@@ -69,7 +72,8 @@ const Signin = () => {
         <div className='container'>
           <div className='-mx-4 flex flex-wrap'>
             <div className='w-full px-4'>
-              <div className='relative shadow-lg mx-auto max-w-32 overflow-hidden rounded-lg bg-white dark:bg-dark_black px-8 py-14 text-center sm:px-12 md:px-16'>
+              <div className='relative shadow-lg mx-auto max-w-32 overflow-hidden rounded-lg bg-white dark:bg-dark_black px-8 py-14 text-center sm:px-12 md:px-16' suppressHydrationWarning>
+                <ShineBorder shineColor={theme === 'dark' ? 'white' : 'black'} />
                 <div className='mb-10 flex justify-center'>
                   <Logo />
                 </div>

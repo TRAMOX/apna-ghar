@@ -3,7 +3,6 @@ import HeroSection from "./components/home/hero";
 import Classes from "./components/home/classes";
 import Subjects from "./components/home/subjects";
 import Faq from "./components/home/faq";
-import Achievements from "./components/home/achievements";
 import CustomerStories from "./components/home/customer-stories";
 import Subscription from "./components/home/subscription";
 
@@ -27,10 +26,6 @@ export default function Home() {
       {/* ---------------------Subjects section Starts-----------------  */}
       <Subjects />
       {/* ---------------------Subjects section Ends-----------------  */}
-
-      {/* ---------------------Achievements section Starts-----------------  */}
-      <Achievements />
-      {/* ---------------------Achievements section Ends-----------------  */}
 
       {/* ---------------------Student Testimonials section Starts-----------------  */}
       <CustomerStories />

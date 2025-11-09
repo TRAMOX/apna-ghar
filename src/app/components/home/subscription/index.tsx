@@ -1,84 +1,96 @@
-"use client";
+"use client"
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 function Subscription() {
-  const [startupPlanList, setstartupPlanList] = useState<any>(null);
+  const [startupPlanList, setstartupPlanList] = useState<any>(null)
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch('/api/page-data')
         if (!res.ok) throw new Error('Failed to fetch')
-
         const data = await res.json()
         setstartupPlanList(data?.startupPlanList)
       } catch (error) {
         console.error('Error fetching services:', error)
       }
     }
-
     fetchData()
   }, [])
+  
   return (
-    <section id='pricing'>
-      <div className='2xl:py-20 py-11'>
-        <div className='container'>
-          <div className='flex flex-col gap-10 md:gap-20'>
-            <div className='max-w-25 text-center mx-auto'>
-              <h2>
-                Pick the plan that fits your{' '}
-                <span className='instrument-font italic font-normal dark:text-white/70'>
-                  learning goals
-                </span>
-              </h2>
-            </div>
-            <div className='grid grid-cols-1 xxl:grid-cols-2 gap-6'>
-              {startupPlanList?.map((items: any, index: number) => (
-                <div
-                  className={`${items.plan_bg_color} p-6 md:p-10 rounded-2xl`}
-                  key={index}>
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                    <div className='flex flex-col gap-12 md:pr-6'>
+    <section id='pricing' className='bg-[#0a0a0f] dark:bg-[#0a0a0f] py-16 md:py-24'>
+      <div className='container'>
+        <div className='flex flex-col gap-10 md:gap-20'>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className='max-w-2xl text-center mx-auto'
+          >
+            <h2 className='text-white'>
+              Pick the plan that fits your{' '}
+              <span className='instrument-font italic font-normal text-purple-400'>
+                learning goals
+              </span>
+            </h2>
+          </motion.div>
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+            {startupPlanList?.map((items: any, index: number) => {
+              const isYellow = items.plan_bg_color === 'bg-pale-yellow'
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.2 }}
+                  className={`p-8 md:p-10 rounded-3xl border hover:scale-[1.02] transition-transform duration-300 ${
+                    isYellow 
+                      ? 'bg-yellow-400 border-yellow-500/30' 
+                      : 'bg-gradient-to-br from-purple-600 to-blue-600 border-purple-500/30'
+                  }`}
+                >
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+                    <div className='flex flex-col gap-12'>
                       <div className='flex flex-col gap-3'>
-                        <p className='py-2 px-4 bg-dark_black w-fit text-white rounded-full'>
+                        <p className={`py-2 px-4 w-fit rounded-full font-bold text-sm ${
+                          isYellow 
+                            ? 'bg-dark_black text-white' 
+                            : 'bg-white/20 text-white backdrop-blur-sm'
+                        }`}>
                           {items.plan_name}
                         </p>
-                        <p className={`text-${items.descp_color}`}>
+                        <p className={`text-base ${isYellow ? 'text-dark_black/80' : 'text-white/90'}`}>
                           {items.plan_descp}
                         </p>
                       </div>
-                      <div className='flex flex-col gap-3 md:gap-5'>
-                        <h2
-                          className={`${items.text_color} dark:${items.text_color}`}>
+                      <div className='flex flex-col gap-5'>
+                        <h2 className={`text-5xl md:text-6xl font-bold ${isYellow ? 'text-dark_black' : 'text-white'}`}>
                           {items.plan_price}
-                          <span
-                            className={`text-base text-${items.descp_color} ml-1`}>
+                          <span className={`text-base ml-2 font-normal ${isYellow ? 'text-dark_black/70' : 'text-white/70'}`}>
                             /month
                           </span>
                         </h2>
                         <Link
                           href='/contact'
-                          className='group text-dark_black font-medium bg-white rounded-full flex items-center gap-4 py-2 pl-5 pr-2 w-fit '>
-                          <span className='group-hover:translate-x-9 transform transition-transform duration-200 ease-in-out'>
-                            Let’s Collaborate
+                          className={`group font-semibold backdrop-blur-sm rounded-full flex items-center gap-4 py-3 pl-6 pr-3 w-fit transition-all duration-300 ${
+                            isYellow 
+                              ? 'text-white bg-dark_black/90 hover:bg-dark_black' 
+                              : 'text-white bg-white/20 hover:bg-white/30'
+                          }`}
+                        >
+                          <span className='group-hover:translate-x-2 transform transition-transform duration-200'>
+                            Get Started
                           </span>
-                          <svg
-                            width='32'
-                            height='32'
-                            viewBox='0 0 32 32'
-                            fill='none'
-                            xmlns='http://www.w3.org/2000/svg'
-                            className='group-hover:-translate-x-36 transition-all duration-200 ease-in-out'>
-                            <rect
-                              width='32'
-                              height='32'
-                              rx='16'
-                              fill='#1B1D1E'
-                            />
+                          <svg width='32' height='32' viewBox='0 0 32 32' fill='none' className='group-hover:rotate-45 transition-transform duration-300'>
+                            <rect width='32' height='32' rx='16' fill={isYellow ? 'white' : '#1B1D1E'} />
                             <path
                               d='M11.832 11.3335H20.1654M20.1654 11.3335V19.6668M20.1654 11.3335L11.832 19.6668'
-                              stroke='white'
+                              stroke={isYellow ? '#1B1D1E' : 'white'}
                               strokeWidth='1.42857'
                               strokeLinecap='round'
                               strokeLinejoin='round'
@@ -87,29 +99,29 @@ function Subscription() {
                         </Link>
                       </div>
                     </div>
-                    <div
-                      className={`flex flex-col gap-4 md:pl-6 md:border-l ${items.border_color}`}>
-                      <p className={`${items.text_color}`}>Features</p>
+                    <div className={`flex flex-col gap-4 md:pl-8 md:border-l ${isYellow ? 'border-dark_black/20' : 'border-white/20'}`}>
+                      <p className={`font-bold text-sm ${isYellow ? 'text-dark_black' : 'text-white'}`}>Features</p>
                       <ul className='flex flex-col gap-4'>
-                        {items.plan_feature?.map((feature: any, index: number) => {
-                          return (
-                            <li key={index} className='flex items-center gap-3'>
-                              <Image
-                                src={items.icon_img}
-                                alt='icon'
-                                width={20}
-                                height={20}
-                              />
-                              <p className={`${items.text_color}`}>{feature}</p>
-                            </li>
-                          )
-                        })}
+                        {items.plan_feature?.map((feature: any, featureIndex: number) => (
+                          <li key={featureIndex} className='flex items-center gap-3'>
+                            <Image
+                              src={items.icon_img}
+                              alt='icon'
+                              width={20}
+                              height={20}
+                              className='flex-shrink-0'
+                            />
+                            <p className={`text-sm ${isYellow ? 'text-dark_black/90' : 'text-white/90'}`}>
+                              {feature}
+                            </p>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </div>

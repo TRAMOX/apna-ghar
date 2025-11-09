@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes'
 import Header from './components/layout/header'
 import Footer from './components/layout/footer/Footer'
 import ScrollToTop from './components/scroll-to-top'
+import { Meteors } from './components/ui/meteors'
 
 export default function RootLayout({
   children,
@@ -19,6 +20,11 @@ export default function RootLayout({
             attribute='class'
             enableSystem={false}
             defaultTheme='light'>
+            {/* Meteor Shower Effect - Global */}
+            <div className='fixed inset-0 pointer-events-none overflow-hidden z-0'>
+              <Meteors number={30} />
+            </div>
+            
             {/* ---------------------Header Starts-----------------  */}
             <Header />
             {/* ---------------------Header Ends-------------------  */}

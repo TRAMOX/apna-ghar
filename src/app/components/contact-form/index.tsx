@@ -2,8 +2,11 @@
 import { Icon } from '@iconify/react/dist/iconify.js'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useTheme } from 'next-themes'
+import { ShineBorder } from '../ui/shine-border'
 
 function ContactForm() {
+  const { theme } = useTheme()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -119,7 +122,9 @@ function ContactForm() {
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className='flex flex-col bg-white dark:bg-dark_black rounded-2xl p-8 gap-8'>
+                className='relative flex flex-col bg-white dark:bg-dark_black rounded-2xl p-8 gap-8 overflow-hidden'
+                suppressHydrationWarning>
+                <ShineBorder shineColor={theme === 'dark' ? 'white' : 'black'} />
                 <div className='flex flex-col md:flex md:flex-row gap-6'>
                   <div className='w-full'>
                     <label htmlFor='name'>Your Name</label>

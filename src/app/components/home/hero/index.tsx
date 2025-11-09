@@ -4,6 +4,7 @@ import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import StarRating from '../../shared/star-rating'
+import { AuroraText } from '../../ui/aurora-text'
 
 function HeroSection() {
   const ref = useRef(null)
@@ -31,17 +32,49 @@ function HeroSection() {
   }
 
   return (
-    <section>
-      <div className='relative w-full pt-44 2xl:pb-20 pb-10 before:absolute before:w-full before:h-full before:bg-linear-to-r before:from-blue_gradient before:via-white before:to-yellow_gradient before:rounded-full before:top-24 before:blur-3xl before:-z-10 dark:before:from-dark_blue_gradient dark:before:via-black dark:before:to-dark_yellow_gradient dark:before:rounded-full dark:before:blur-3xl dark:before:-z-10'>
+    <section className="relative overflow-hidden">
+      {/* Animated Curved Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-pink-900/20">
+        {/* Animated SVG Curve */}
+        <svg 
+          className="absolute inset-0 w-full h-full" 
+          viewBox="0 0 1440 800" 
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <motion.path
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 3, ease: "easeInOut" }}
+            d="M0,400 Q360,100 720,400 T1440,400 L1440,800 L0,800 Z"
+            fill="none"
+            stroke="url(#gradient)"
+            strokeWidth="3"
+            className="drop-shadow-lg"
+          />
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#ec4899" />
+              <stop offset="50%" stopColor="#8b5cf6" />
+              <stop offset="100%" stopColor="#ec4899" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <div className='relative w-full pt-44 2xl:pb-20 pb-10'>
         <div className='container relative z-10'>
           <div ref={ref} className='flex flex-col gap-8'>
             {/* ---------------- heading text --------------- */}
             <motion.div
               {...bottomAnimation}
               className='relative flex flex-col text-center items-center gap-4'>
-              <h1 className='font-medium w-full'>
-                Your Complete Learning Journey
-                <span className='instrument-font italic font-normal dark:text-white/70'>
+              <h1 className='font-medium w-full text-dark_black dark:text-white'>
+                Your Complete{' '}
+                <AuroraText colors={["#FF0080", "#7928CA", "#0070F3", "#38bdf8"]} speed={1.5}>
+                  Learning Journey
+                </AuroraText>
+                <span className='instrument-font italic font-normal text-dark_black/70 dark:text-white/70'>
                   {' '}
                   from Class 1 to 12
                 </span>
@@ -60,7 +93,7 @@ function HeroSection() {
                 {/* ----------- Get started Link -------------- */}
                 <Link
                   href='/contact'
-                  className='group bg-purple_blue text-white font-medium flex flex-row justify-between items-center py-2 px-5 rounded-full max-w-64 w-full md:py-3 border border-purple_blue transition-all duration-200 ease-in-out hover:bg-transparent hover:text-purple_blue'>
+                  className='group bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium flex flex-row justify-between items-center py-3 px-6 rounded-full max-w-64 w-full md:py-3 border-2 border-transparent transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-purple-500/50 hover:scale-105'>
                   <span className='flex text-start transform transition-transform duration-200 ease-in-out group-hover:translate-x-24'>
                     Start Learning
                   </span>
@@ -75,18 +108,18 @@ function HeroSection() {
                       width='40'
                       height='40'
                       rx='20'
-                      className='fill-white transition-colors duration-200 ease-in-out group-hover:fill-purple_blue'
+                      className='fill-white/90'
                     />
                     <path
                       d='M15.832 15.3334H24.1654V23.6667'
-                      className='stroke-[#1B1D1E] transition-colors duration-200 ease-in-out group-hover:stroke-white'
+                      className='stroke-purple-600'
                       strokeWidth='1.66667'
                       strokeLinecap='round'
                       strokeLinejoin='round'
                     />
                     <path
                       d='M15.832 23.6667L24.1654 15.3334'
-                      className='stroke-[#1B1D1E] transition-colors duration-500 ease-in-out group-hover:stroke-white'
+                      className='stroke-purple-600'
                       strokeWidth='1.66667'
                       strokeLinecap='round'
                       strokeLinejoin='round'

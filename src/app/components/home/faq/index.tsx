@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../ui/accordion';
 
 function Faq() {
@@ -22,42 +23,53 @@ function Faq() {
     }, [])
 
   return (
-    <section>
-      <div className='2xl:py-20 py-11'>
-        <div className='container'>
-          <div className='flex flex-col gap-10 md:gap-20'>
-            <div className='max-w-md text-center mx-auto'>
-              <h2>
-                Got questions? We’ve got{' '}
-                <span className='instrument-font italic font-normal dark:text-white/70'>
-                  answers
-                </span>
-              </h2>
-            </div>
-            <div className='flex flex-col'>
-              <Accordion
-                type='single'
-                collapsible
-                className='flex flex-col gap-4'>
-                {faqList?.map((item:any, index:any) => (
+    <section id="faq" className='bg-[#0a0a0f] dark:bg-[#0a0a0f] py-16 md:py-24'>
+      <div className='container'>
+        <div className='flex flex-col gap-10 md:gap-20'>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className='max-w-2xl text-center mx-auto'
+          >
+            <h2 className='text-white'>
+              Got questions? We've got{' '}
+              <span className='instrument-font italic font-normal text-purple-400'>
+                answers
+              </span>
+            </h2>
+          </motion.div>
+          <div className='flex flex-col'>
+            <Accordion
+              type='single'
+              collapsible
+              className='flex flex-col gap-4'>
+              {faqList?.map((item:any, index:any) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
                   <AccordionItem
-                    key={index}
                     value={`item-${index}`}
-                    className='p-6 border border-dark_black/10 dark:border-white/50 group'>
+                    className='p-6 border border-gray-800/50 hover:border-purple-500/50 rounded-2xl bg-gradient-to-br from-[#1a1a2e] to-[#16213e] group transition-all duration-300'
+                  >
                     <AccordionTrigger className='group-hover:cursor-pointer'>
-                      <h4 className='text-dark_black dark:text-white/80'>
+                      <h4 className='text-white text-left'>
                         {item.faq_que}
                       </h4>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <p className='text-base font-normal text-dark_black/60 dark:text-white/60'>
+                      <p className='text-base font-normal text-gray-400'>
                         {item.faq_ans}
                       </p>
                     </AccordionContent>
                   </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
+                </motion.div>
+              ))}
+            </Accordion>
           </div>
         </div>
       </div>
